@@ -1,0 +1,8 @@
+# pixi environments
+.pixi
+*.egg-info
+.idea
+
+multiqc_report*.html
+multiqc_data*
+reports

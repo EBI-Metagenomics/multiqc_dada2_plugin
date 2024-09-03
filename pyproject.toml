@@ -1,0 +1,31 @@
+[project]
+name = "dada2_plugin"
+version = "0.1"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas",
+    "multiqc",
+]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "osx-64"]
+
+[project.entry-points."multiqc.modules.v1"]
+dada2 = "dada2_plugin.modules.dada2:MultiqcModule"
+ 
+[project.entry-points."multiqc.cli_options.v1"]
+disable_plugin = "dada2_plugin.cli:disable_plugin"
+
+[project.entry-points."multiqc.hooks.v1"]
+execution_start = "dada2_plugin.hooks:dada2_plugin_execution_start"
+
+[tool.pixi.pypi-dependencies]
+dada2_plugin = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+example_single = "multiqc -f example_data/single_run && open multiqc_report.html"
+example_study = "multiqc -f example_data/multi_run_study && open multiqc_report.html"
+
+build_docker = "docker build -t quay.io/microbiome-informatics/multiqc-with-dada2 ."
+run_docker = "docker run --platform linux/amd64 -v $(PWD)/example_data:/data -v $(PWD)/reports:/reports quay.io/microbiome-informatics/multiqc-with-dada2 multiqc /data --outdir /reports"
